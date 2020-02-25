@@ -1,0 +1,197 @@
+// 10/20/2019
+// Tahsin Can Sarlak
+// Whack a Mole game with LEDs
+
+int led_1 = 13,led_2 = 12,led_3 = 11,led_4 = 10,led_5 = 9,led_6 = 8;
+
+int button_1 = 6,button_2 = 5,button_3 = 4,button_4 = 7,button_5 = 0,button_6 = 2;
+
+int pushed_1, pushed_2, pushed_3, pushed_4, pushed_5, pushed_6;
+
+int on;
+int ms = 375;
+int point = 0;
+int count = 0;
+int times_total = 110; 
+
+// Gets the servo library
+#include <Servo.h>
+
+// create servo object to control a servo
+Servo myservo; 
+
+void setup() {
+    pinMode(led_1,OUTPUT);
+    pinMode(led_2,OUTPUT);
+    pinMode(led_3,OUTPUT);
+    pinMode(led_4,OUTPUT);
+    pinMode(led_5,OUTPUT);
+    pinMode(led_6,OUTPUT);
+    
+    pinMode(button_1,INPUT);
+    pinMode(button_2,INPUT);
+    pinMode(button_3,INPUT);
+    pinMode(button_4,INPUT);
+    pinMode(button_5,INPUT);
+    pinMode(button_6,INPUT);
+
+    Serial.begin(9600);
+
+    // attaches the servo on D1 to the servo object
+    myservo.attach(3);  
+
+    myservo.write(point);
+}
+
+void loop() {
+    initialize();
+}
+
+void initialize(){
+    digitalWrite(led_1,LOW);
+    digitalWrite(led_2,LOW);
+    digitalWrite(led_3,LOW);
+    digitalWrite(led_4,LOW);
+    digitalWrite(led_5,LOW);
+    digitalWrite(led_6,LOW);
+
+    count = count + 1;
+    if (count == times_total or count == 135){
+      myservo.write(point);
+      delay(2000);
+      myservo.write(0);
+      exit(0);
+    }
+    on = random(1,7);
+
+    if (on == 1){
+      turn_led_1();
+    }
+    else if (on == 2){
+      turn_led_2(); 
+    }
+    else if (on == 3){
+      turn_led_3();
+    }
+    else if (on == 4){
+      turn_led_4();
+    }
+    else if (on == 5){
+      turn_led_5(); 
+    }
+    else if (on == 6){
+      turn_led_6(); 
+    }
+}
+
+void points(){
+     point=point+1;
+     myservo.write(point);
+     Serial.println(point); 
+}
+
+void turn_led_1(){
+  for (int i=0;i<ms;i++){
+      pushed_1 = digitalRead(button_1);
+      if (pushed_1 == 1){
+         digitalWrite(led_1,HIGH); 
+         if (i == ms-1){
+            digitalWrite(led_1,LOW);
+          }
+      }       
+      else {
+         digitalWrite(led_1,LOW);
+         points();
+         initialize();
+      }   
+  }
+   
+}
+
+void turn_led_2(){
+   for (int i=0;i<ms;i++){
+      pushed_2 = digitalRead(button_2);
+      if (pushed_2 == 1){
+         digitalWrite(led_2,HIGH); 
+          if (i == ms-1){
+            digitalWrite(led_2,LOW);
+          }
+      } 
+      else {
+         digitalWrite(led_2,LOW);
+         points();
+         initialize();
+      }   
+   }  
+}
+
+void turn_led_3(){
+   for (int i=0;i<ms/3;i++){
+      pushed_3 = digitalRead(button_3);
+      if (pushed_3 != 1){
+         digitalWrite(led_3,HIGH); 
+          if (i == (ms/3)-1){
+            digitalWrite(led_3,LOW);
+          }
+      }
+      
+      else {
+         digitalWrite(led_3,LOW);
+      //   points();
+         initialize();
+      }  
+   }
+   
+}
+
+void turn_led_4(){
+   for (int i=0;i<ms;i++){
+      pushed_4 = digitalRead(button_4);
+      if (pushed_4   == 1){
+         digitalWrite(led_4,HIGH); 
+          if (i == ms-1){
+            digitalWrite(led_4,LOW);
+          }
+      }
+      
+      else {
+         digitalWrite(led_4,LOW);
+         points();
+         initialize();
+      }   
+   }
+}
+
+void turn_led_5(){
+  for (int i=0;i<ms;i++){
+      pushed_5 = analogRead(button_5);
+      if (pushed_5 > 249){
+         digitalWrite(led_5,HIGH); 
+          if (i == ms-1){
+            digitalWrite(led_5,LOW);
+          }     
+      } 
+      else  {
+         digitalWrite(led_5,LOW);
+         points();
+         initialize();
+      } 
+  } 
+}
+
+void turn_led_6(){
+  for (int i=0;i<ms;i++){
+     pushed_6 = digitalRead(button_6);
+      if (pushed_6 == 1){
+         digitalWrite(led_6,HIGH);
+          if (i == ms-1){
+            digitalWrite(led_6,LOW);
+          } 
+      }
+      else {
+         digitalWrite(led_6,LOW);
+         points();
+         initialize();
+     }   
+  }   
+}
