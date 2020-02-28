@@ -1,17 +1,26 @@
-// 10/20/2019
 // Tahsin Can Sarlak
 // Whack a Mole game with LEDs
 
+// Initializes the LED pins
 int led_1 = 13,led_2 = 12,led_3 = 11,led_4 = 10,led_5 = 9,led_6 = 8;
 
+// Initializes the button pins
 int button_1 = 6,button_2 = 5,button_3 = 4,button_4 = 7,button_5 = 0,button_6 = 2;
 
+// The variables to save if a button is pushed
 int pushed_1, pushed_2, pushed_3, pushed_4, pushed_5, pushed_6;
 
+// A variable to set one of the pins on
 int on;
+
+// The amount of time that determines how fast the LEDs are going to switch
 int ms = 375;
+
+// The variables to keep track of the points and the count of each LEDs
 int point = 0;
 int count = 0;
+
+// The total amount of cycles that LEDs will light up
 int times_total = 110; 
 
 // Gets the servo library
@@ -21,13 +30,15 @@ int times_total = 110;
 Servo myservo; 
 
 void setup() {
+    // Puts all of the LEDs as output
     pinMode(led_1,OUTPUT);
     pinMode(led_2,OUTPUT);
     pinMode(led_3,OUTPUT);
     pinMode(led_4,OUTPUT);
     pinMode(led_5,OUTPUT);
     pinMode(led_6,OUTPUT);
-    
+
+    // Puts all of the buttons as input
     pinMode(button_1,INPUT);
     pinMode(button_2,INPUT);
     pinMode(button_3,INPUT);
@@ -35,19 +46,21 @@ void setup() {
     pinMode(button_5,INPUT);
     pinMode(button_6,INPUT);
 
-    Serial.begin(9600);
-
     // attaches the servo on D1 to the servo object
     myservo.attach(3);  
 
+    // Moves the indicator to 0 to initialize
     myservo.write(point);
 }
 
+// Calls the main function that controls everything
 void loop() {
     initialize();
 }
 
+
 void initialize(){
+    // Sets each LEDs as low
     digitalWrite(led_1,LOW);
     digitalWrite(led_2,LOW);
     digitalWrite(led_3,LOW);
@@ -55,15 +68,21 @@ void initialize(){
     digitalWrite(led_5,LOW);
     digitalWrite(led_6,LOW);
 
+    // It increases the count by 1
     count = count + 1;
+    
+    // It checks if the game is completed, and it exits the game after showing the total score
     if (count == times_total or count == 135){
       myservo.write(point);
       delay(2000);
       myservo.write(0);
       exit(0);
     }
+
+    // Creates a random number to light up the LEDs
     on = random(1,7);
 
+    // Turns on that specific LED according to random number generated
     if (on == 1){
       turn_led_1();
     }
@@ -84,12 +103,16 @@ void initialize(){
     }
 }
 
+// This function moves the indicator by one and updates the servos position
 void points(){
      point=point+1;
      myservo.write(point);
-     Serial.println(point); 
 }
 
+// These dunctions check if the button is pushed and if not, it goes back
+// to initialize() to set a new LED on
+// If the button is pushed, it adds one more point and it initializes a new LED
+// by calling initialize()
 void turn_led_1(){
   for (int i=0;i<ms;i++){
       pushed_1 = digitalRead(button_1);
@@ -140,6 +163,7 @@ void turn_led_3(){
       //   points();
          initialize();
       }  
+      Serial.println(pushed_3); 
    }
    
 }
